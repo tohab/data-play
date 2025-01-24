@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <form id="country-form">
+            <select class="form-select" id="country-select" name="country">
+                {% for country in countries %}
+                    <option value="{{ country }}" {% if country == selected_country %}selected{% endif %}>
+                        {{ country }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 chart-container">
+        <div id="chart"></div>
+    </div>
+</div>
+
+<script>
+    // Initialize the chart
+    const graphData = JSON.parse('{{ graphJSON | tojson | safe }}');
+    Plotly.newPlot('chart', graphData.data, graphData.layout);
+
+    // Handle country selection change
+    document.getElementById('country-select').addEventListener('change', function() {
+        window.location.href = '/?country=' + encodeURIComponent(this.value);
+    });
+</script>
+{% endblock %}
